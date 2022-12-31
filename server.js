@@ -17,34 +17,27 @@ const formSchema={
     course:String
 }
 
-const Form=mongoose.model("Form",formSchema);
+const Form=mongoose.model("virtualtour",formSchema);
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.get("/",function(req,res){
     res.sendFile(__dirname+"/form.html");
 })
 
+app.get("/index",function(req,res){
+    res.sendFile(__dirname+"/index.html");
+})
 
-app.post("/",function(req,res){
+app.post("/details",function(req,res){
     let newForm=new Form({
         name:req.body.name,
         email:req.body.email,
         course:req.body.course
     });
     newForm.save();
-    res.writeHead(200,{'Content-Type':'text/html'});
-    res.redirect('/');
-    fs.readFile('./ index.html',null,function(error,data) {
-    if(error){
-    
-        res.writeHead(404);
-        res.write('File not found!');
-        res.write(data);
-    }else{
-        res.end();
-    }
-    });
+    res.redirect("/index");
 })
 
-app.listen(process.env.PORT || 3000)
+app.use(express.static(__dirname + '/public/'));
 
+app.listen(process.env.PORT || 3000)
